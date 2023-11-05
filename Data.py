@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 from DataManager import FileMaker
 import pyarrow.feather as feather
-
+from collections import defaultdict
+import re
 
 FileMaker().run()
 
@@ -12,14 +13,48 @@ class BaseDataReader:
         self.base_data = pd.read_feather('./temp_directory/temp.feather')
 
         self.base_data = self.base_data.drop([
-            'index', 'Unnamed: 0.1','Unnamed: 0','test'
+            'index', 'Unnamed: 0.1','Unnamed: 0','test',
         ],axis=1)
         self.base_data = self.base_data.set_index('Time Stamp')
+
+
+class TokenManager(BaseDataReader):
+    def __init__(self):
+        super().__init__()
+
+class SimpleTokenizer:
+    def __init__(self):
+        self.token_to_id = defaultdict(lambda: len(self.token_to_id))
+        self.token_to_id['<PAD>'] = 0  # Padding token
+
+    def tokenize(self, text):
+        # Simple tokenization by splitting on non-word characters
+        tokens = re.findall(r'\w+|\S', text)
+        return tokens
+
+    def convert_tokens_to_ids(self, tokens):
+        return [self.token_to_id[token] for token in tokens]
+
+    def tokenize_column(self, series):
+        # Apply tokenization to each row in the pandas series
+        tokenized = series.apply(self.tokenize)
+        return tokenized
+    
+    def run_convert(self):
+        pass
+
+
+
+
+
 
 
 class DataMod(BaseDataReader):
     def __init__(self):
         super().__init__()
+
+        self.tokenizer = SimpleTokenizer()
+
 
 
 
@@ -65,7 +100,7 @@ class TimeStep:
 
         '''Dataframe'''
         self.base_data = self.reader.base_data.copy()
-        self.base_data = self.base_data.drop(['target'],axis=1)
+        # self.base_data = self.base_data.drop(['target'],axis=1)
 
         '''numpy array of our data'''
         # self.data = self.reader.data
