@@ -1,13 +1,27 @@
 import numpy as np
 import pandas as pd
-from DataManager import FileMaker
+# from DataManager import FileMaker
 import pyarrow.feather as feather
 from collections import defaultdict
 import re
 
 from abc import ABC, abstractmethod
 
-FileMaker().run()
+# FileMaker().run()
+
+class NumpyReader(ABC):
+    def __init__(self):
+        self.main_data_list = ['main_matrix1.npz', 'main_matrix2.npz', 'main_matrix3.npz']
+        self.matrix_list = []
+        for i in self.main_data_list:
+            matrix = np.load(i)
+            matrix = list(matrix.values())
+            
+            self.matrix_list.append(matrix[0])
+        self.matrix = np.concatenate(self.matrix_list, axis=0)
+
+
+
 
 
 class BaseDataReader:
