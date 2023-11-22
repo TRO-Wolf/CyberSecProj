@@ -8,8 +8,5 @@ seaborn
 plotly
 matplotlib
 stable-baselines3[extra]
-torch --index-url https://download.pytorch.org/whl/cu118
-torchvision
-torchaudio
 feather-format
 
