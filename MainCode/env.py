@@ -155,6 +155,7 @@ class Simulator(Reward):
             pass
             
     def step(self):
+        pass
 
         
 
