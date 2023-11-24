@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 from .FileManager import FileMaker
 import pyarrow.feather as feather
 from collections import defaultdict
@@ -11,7 +12,7 @@ FileMaker().run()
 
 class NumpyReader(ABC):
     def __init__(self):
-        self.main_data_list = ['main_matrix1.npz', 'main_matrix2.npz', 'main_matrix3.npz']
+        self.main_data_list = ['./data_files/main_matrix1.npz', './data_files/main_matrix2.npz', './data_files/main_matrix3.npz']
         matrix_list = []
         for i in self.main_data_list:
             matrix = np.load(i)
