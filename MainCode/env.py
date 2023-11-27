@@ -30,41 +30,29 @@ npr = NumpyReader()
 class CustomTensorDataReader(ABC):
     def __init__(self):
 
-        self.data = torch.tensor(npr.matrix.copy(), dtype=torch.float32)
-
-        self.target_data = torch.load('target.pt').cpu().numpy()
-        self.index = torch.load('index.pt').cpu().numpy()
-
-
-
-    
-
-
-        
-
-
-
-
+        self.target_data = torch.load('./data_files/target.pt').cpu().numpy()
+        self.index = torch.load('./data_files/index.pt').cpu().numpy()
+        self.data = npr.matrix.copy()
 
 class Stepper(CustomTensorDataReader):
     def __init__(self):
         super().__init__()
-
         self.reset_step()
 
     def reset_step(self):
         self.current_step = 0
+        self.current_index = np.random.randint(1,62220)
 
 
 class Window(Stepper):
     def __init__(self):
         super().__init__()
-
+        self.reset_step()
         self.update_window()
 
     def update_data_window(self):
         self.window = self.data[
-                self.index[self.current_step][0] : self.index[self.current_step][1]
+            self.current_index 
         ]
 
     def update_target_window(self):
@@ -75,6 +63,10 @@ class Window(Stepper):
     def update_window(self):
         self.update_data_window()
         self.update_target_window()
+       
+    def reset_window(self):
+        self.reset_step()
+        return self.window, {}
 
 
 
@@ -155,10 +147,9 @@ class Simulator(Reward):
             pass
             
     def step(self):
+        pass
 
-        
-
-
+       
 
 
 class ReplayMemory(object):
